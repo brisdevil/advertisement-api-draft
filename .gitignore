@@ -1,0 +1,33 @@
+/src/vendor
+/src/.env
+/src/storage/files
+
+# IDEs #
+*.sublime-project
+*.sublime-workspace
+/.idea/
+*.komodoproject
+
+# Packages #
+*.7z
+*.dmg
+*.gz
+*.tgz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.phar
+
+# OS generated files #
+.DS_Store
+.DS_Store?
+.nfs*
+._*
+.Spotlight-V100
+.Trashes
+.vagrant
+ehthumbs.db
+Thumbs.db
+sftp-config.json

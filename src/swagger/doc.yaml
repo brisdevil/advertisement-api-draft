@@ -1,0 +1,142 @@
+openapi: 3.0.1
+
+info:
+  title: Черновое API рекламных объявлений
+  contact:
+    url: https://github.com/brisdevil
+  version: 1.0.0
+servers:
+  - url: api/v1
+
+paths:
+  /advertisement:
+    post:
+      summary: Создание нового рекламного объявления
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdvertisementCreateRequest'
+      responses:
+        200:
+          description: Рекламное объявление успешно создано
+        500:
+          description: Произошла ошибка при создании объявления
+  /advertisement/{id}:
+    get:
+      summary: Получение данных рекламного объявления
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+          example: 2
+          description: Идентификатор объявления
+      responses:
+        201:
+          description: Получена запись с данным ID
+          content:
+            application/json:
+              schema:
+                properties:
+                  item:
+                    $ref: '#/components/schemas/AdvertisementResponse'
+        404:
+          description: Объявление не найдено
+    post:
+      summary: Обновление рекламного объявления
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+          example: 2
+          description: Идентификатор объявления
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdvertisementUpdateRequest'
+      responses:
+        204:
+          description: Объявление успешно обновлено
+  /advertisement/run:
+    post:
+      summary: Открутка релевантного рекламного объявления
+      responses:
+        200:
+          description: Открутка произведена
+          content:
+            application/json:
+              schema:
+                properties:
+                  item:
+                    $ref: '#/components/schemas/AdvertisementRunResponse'
+        400:
+          description: Нет доступных для открутки объявлений
+        500:
+          description: Произошла ошибка при открутке объявления
+
+components:
+  schemas:
+    AdvertisementBaseProperties:
+      properties:
+        text:
+          type: string
+          description: Текст рекламного объявления
+          example: Предзаказ PlayStation 5 со скидкой 5%!
+        price:
+          type: number
+          description: Цена одного показа, руб.
+          example: 1.28
+        amount:
+          type: integer
+          description: Лимит показов
+          example: 10000
+      required: ['text', 'price', 'amount']
+    AdvertisementBannerUploadProperty:
+      properties:
+        banner:
+          type: string
+          description: Изображение баннера (файл), прикрепляемое к объявлению
+      required: ['banner']
+    AdvertisementIdProperty:
+      properties:
+        id:
+          type: integer
+          description: Идентификатор рекламного объявления
+          example: 10
+      required: ['id']
+    AdvertisementCreateRequest:
+      allOf:
+        - $ref: '#/components/schemas/AdvertisementBaseProperties'
+        - $ref: '#/components/schemas/AdvertisementBannerUploadProperty'
+    AdvertisementUpdateRequest:
+      allOf:
+        - $ref: '#/components/schemas/AdvertisementBaseProperties'
+        - $ref: '#/components/schemas/AdvertisementBannerUploadProperty'
+    AdvertisementResponse:
+      allOf:
+        - $ref: '#/components/schemas/AdvertisementIdProperty'
+        - $ref: '#/components/schemas/AdvertisementBaseProperties'
+    AdvertisementRunResponse:
+      properties:
+        id:
+          type: integer
+          description: Идентификатор открученного рекламного объявления
+          example: 10
+        text:
+          type: string
+          description: Текст открученного рекламного объявления
+          example: Предзаказ PlayStation 5 со скидкой 5%!
+        banner:
+          type: integer
+          description: Идентификатор файла баннера
+          example: 5
+        url:
+          type: string
+          description: Ссылка на баннер
+          example: '/storage/files/11204test2.png'
+      required: ['text', 'banner', 'url']

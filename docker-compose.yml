@@ -1,0 +1,58 @@
+version: '3'
+
+networks:
+  application:
+
+services:
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx
+    ports:
+      - "8088:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./.docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+      - postgresql
+    networks:
+      - application
+
+  postgresql:
+    image: postgres
+    container_name: postgresql
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./src/.env
+    volumes:
+      - ./docker_postgres_init_test.sql:/docker-entrypoint-initdb.d/docker_postgres_init_for_phpunit.sql
+      - ./.docker/postgresql:/var/lib/postgresql
+    networks:
+      - application
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: php
+    volumes:
+      - ./src:/var/www/html
+    ports:
+      - "9000:9000"
+    networks:
+      - application
+
+  swagger:
+    image: swaggerapi/swagger-ui
+    container_name: swagger
+    volumes:
+      - ./src/swagger/doc.json:/swagger.json
+    ports:
+      - "8089:8080"
+    environment:
+      SWAGGER_JSON: /swagger.json
+    networks:
+      - application
