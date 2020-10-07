@@ -38,7 +38,7 @@ class CreateInitialTables extends Migration
     }
 
     /**
-     * Инициировать работу с тестовой базой данных?
+     * Инициирует работу с тестовой базой данных.
      *
      * @return $this
      */
@@ -137,6 +137,8 @@ class CreateInitialTables extends Migration
 
     /**
      * Удаляет таблицы, созданные в рамках данной миграции (если они существуют).
+     *
+     * @return void
      */
     protected function dropTables(): void
     {
