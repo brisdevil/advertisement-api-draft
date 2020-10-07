@@ -28,7 +28,7 @@ services:
     env_file:
       - ./src/.env
     volumes:
-      - ./docker_postgres_init_test.sql:/docker-entrypoint-initdb.d/docker_postgres_init_for_phpunit.sql
+      - ./docker_postgres_init_for_phpunit.sql:/docker-entrypoint-initdb.d/docker_postgres_init_for_phpunit.sql
       - ./.docker/postgresql:/var/lib/postgresql
     networks:
       - application
